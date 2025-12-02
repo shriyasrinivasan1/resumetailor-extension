@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ResumeTailor AI</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>ResumeTailor AI</h1>
+      <p class="subtitle">Configure your API key and master resume.</p>
+
+      <div class="section">
+        <label for="api-key">OpenAI API Key</label>
+        <input id="api-key" type="password" placeholder="sk-..." />
+        <p class="hint">Stored locally via chrome.storage.sync and used only in your browser.</p>
+      </div>
+
+      <div class="section">
+        <label for="master-resume">Master Resume</label>
+        <textarea id="master-resume" rows="8" placeholder="Paste your full master resume here..."></textarea>
+      </div>
+
+      <div class="buttons">
+        <button id="save-settings">Save Settings</button>
+        <button id="generate-resume">Generate Resume for This Job</button>
+      </div>
+
+      <p id="status"></p>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

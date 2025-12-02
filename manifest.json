@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "ResumeTailor AI",
+  "version": "0.1.0",
+  "description": "Generate AI-tailored resumes from your master resume and job postings.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ResumeTailor AI"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
