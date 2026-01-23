@@ -17,10 +17,43 @@ h1 {
   color: #9ca3af;
   margin: 0 0 12px;
 }
+.section {
+  margin-bottom: 12px;
+}
 
-#test-button {
+label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+input[type="password"],
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.hint {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+button {
   padding: 6px 10px;
-  font-size: 13px;
+  font-size: 12px;
   border-radius: 6px;
   border: none;
   background: #2563eb;
@@ -28,11 +61,21 @@ h1 {
   cursor: pointer;
 }
 
-#test-button:hover {
+button:hover {
   background: #1d4ed8;
 }
 
+#copy-resume {
+  margin-top: 6px;
+  background: #4b5563;
+}
+
+#copy-resume:hover {
+  background: #374151;
+}
+
 #status {
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
 }

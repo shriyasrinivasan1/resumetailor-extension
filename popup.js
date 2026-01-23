@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const masterResumeInput = document.getElementById('master-resume');
   const saveButton = document.getElementById('save-settings');
   const generateButton = document.getElementById('generate-resume');
+  const tailoredResumeOutput = document.getElementById('tailored-resume');
+  const copyButton = document.getElementById('copy-resume');
   const status = document.getElementById('status');
 
-  if (!apiKeyInput || !masterResumeInput || !saveButton || !generateButton || !status) {
+  if (!apiKeyInput || !masterResumeInput || !saveButton || !generateButton || !tailoredResumeOutput || !copyButton || !status) {
     return;
   }
 
@@ -37,7 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   generateButton.addEventListener('click', () => {
+    status.textContent = '';
+
+    const openaiApiKey = apiKeyInput.value.trim();
+    const masterResume = masterResumeInput.value.trim();
+
+    if (!openaiApiKey) {
+      status.textContent = 'Please enter your OpenAI API key first.';
+      return;
+    }
+    if (!masterResume) {
+      status.textContent = 'Please paste your master resume first.';
+      return;
+    }
+
     status.textContent = 'Requesting job details from this page...';
+    tailoredResumeOutput.value = '';
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs && tabs[0];
@@ -49,21 +66,64 @@ document.addEventListener('DOMContentLoaded', () => {
       chrome.tabs.sendMessage(
         activeTab.id,
         { type: 'GET_JOB_INFO' },
-        (response) => {
+        (jobResponse) => {
           if (chrome.runtime.lastError) {
             status.textContent = 'Error talking to page: ' + chrome.runtime.lastError.message;
             return;
           }
 
-          if (!response || !response.success) {
+          if (!jobResponse || !jobResponse.success) {
             status.textContent = 'No job info returned from page.';
             return;
           }
 
-          const preview = (response.jobDescription || '').slice(0, 200).replace(/\s+/g, ' ');
-          status.textContent = `Got job info: "${response.jobTitle || 'Untitled role'}" – preview: ${preview}...`;
+          const { jobTitle, jobDescription } = jobResponse;
+          status.textContent = 'Contacting OpenAI to generate tailored resume...';
+
+          chrome.runtime.sendMessage(
+            {
+              type: 'GENERATE_TAILORED_RESUME',
+              payload: {
+                apiKey: openaiApiKey,
+                masterResume,
+                jobTitle,
+                jobDescription,
+              },
+            },
+            (genResponse) => {
+              if (chrome.runtime.lastError) {
+                status.textContent = 'Error from background: ' + chrome.runtime.lastError.message;
+                return;
+              }
+
+              if (!genResponse || !genResponse.success) {
+                status.textContent = 'OpenAI error: ' + (genResponse && genResponse.error ? genResponse.error : 'Unknown error');
+                return;
+              }
+
+              tailoredResumeOutput.value = genResponse.tailoredResume || '';
+              status.textContent = 'Tailored resume generated.';
+            }
+          );
         }
       );
     });
+  });
+
+  copyButton.addEventListener('click', async () => {
+    const text = tailoredResumeOutput.value;
+    if (!text) {
+      status.textContent = 'Nothing to copy yet.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      status.textContent = 'Copied tailored resume to clipboard.';
+      setTimeout(() => {
+        status.textContent = '';
+      }, 2000);
+    } catch (err) {
+      status.textContent = 'Could not copy to clipboard.';
+    }
   });
 });
