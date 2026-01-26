@@ -24,12 +24,19 @@
       <div class="buttons">
         <button id="save-settings">Save Settings</button>
         <button id="generate-resume">Generate Resume for This Job</button>
+        <button id="regenerate-resume">Regenerate</button>
       </div>
 
       <div class="section">
         <label for="tailored-resume">Tailored Resume</label>
         <textarea id="tailored-resume" rows="10" readonly placeholder="Generated tailored resume will appear here..."></textarea>
         <button id="copy-resume">Copy to Clipboard</button>
+        <button id="download-pdf">Download as PDF</button>
+      </div>
+
+      <div class="section">
+        <label for="reasoning-debug">Debug Reasoning (why these phrases and bullets were chosen)</label>
+        <textarea id="reasoning-debug" rows="6" readonly placeholder="Model reasoning and keyword mapping will appear here for testing."></textarea>
       </div>
 
       <p id="status"></p>
