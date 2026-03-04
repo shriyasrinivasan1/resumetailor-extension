@@ -1,29 +1,35 @@
 {
   "manifest_version": 3,
   "name": "ResumeTailor AI",
-  "version": "0.1.0",
-  "description": "Generate AI-tailored resumes from your master resume and job postings.",
+  "version": "1.0.0",
+  "description": "Generate AI-tailored, ATS-optimized resumes from job postings using Claude AI.",
   "action": {
     "default_popup": "popup.html",
     "default_title": "ResumeTailor AI"
   },
   "permissions": [
+    "activeTab",
     "storage",
     "scripting",
-    "activeTab"
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://api.anthropic.com/*"
   ],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
-  "host_permissions": [
-    "https://api.openai.com/*"
-  ],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["contentScript.js"],
+      "js": ["content_script.js"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["*.js", "*.css"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
